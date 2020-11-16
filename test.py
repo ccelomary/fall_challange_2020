@@ -10,7 +10,8 @@ ingradients = [[0, -2, -1, -1, 0, 15, 'target'],
 [-2, -1, 0, -1, 1, 10, 'target'],
 [-3, 0, -2, 0, 2, 9, 'target'],
 [0, -2, 0, -2, 3 ,12, 'target'],
-[0, -3, -2, 0, 4, 12, 'target']
+[0, -3, -2, 0, 4, 12, 'target'],
+[0, 0, 0, -10, 20, 15, 'target']
 ]
 
 #casts
@@ -27,7 +28,8 @@ complex_casts = [
     [1, 2, -1, 0, 11, 'pcast'],
     [1, 1, 0, 0, 12, 'pcast'],
     [0, 0, 0, 1, 13, 'pcast'],
-    [1, 2, -1, 0, 14, 'pcast']
+    [1, 2, -1, 0, 14, 'pcast'],
+    [0, 0, 0, 1, 15, 'pcast'],
 ]
 
 mdata = []
@@ -57,7 +59,7 @@ def reset(casted_id):
 
 
 """
-    CODE START here
+    CODE START HERE
 """
 
 d = {
@@ -81,9 +83,8 @@ def get_all_child(data, gradient, casts):
             for j in range(len(casts)):
                 if casts[j][i] > 0:
                     children.append(get_all_child(data, casts[j], casts[:j] + casts[j + 1:]))
-                    re[name] = children
-                    return re
-    return {name:[]}
+    re[name] = children
+    return re
 
 """
 def calculate_number_steps(mdata, gradient, casts, l = 1):
@@ -110,7 +111,7 @@ def search_items(data, parent, proba):
 
 if __name__ == '__main__':
     proba = dict(calculate_probability(casts + complex_casts))
-    for i in range(5):
+    for i in range(6):
         print('-' * 15)
         count = 0
         while not check_for_brew(my_data, ingradients[i]):
@@ -123,7 +124,7 @@ if __name__ == '__main__':
             else:
                 print('Error')
             count += 1
-            if count >= 10:
+            if count >= 20:
                 print("timeout")
                 break
         else:
