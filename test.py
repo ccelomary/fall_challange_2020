@@ -22,12 +22,12 @@ casts = [
 ]
 
 complex_casts = [
-    [2, 2, 0, -1, 9, 'cast'],
-    [0, -3, -3, 0, 10, 'cast'],
-    [1, 2, -1, 0, 11, 'cast'],
-    [1, 1, 0, 0, 12, 'cast'],
-    [0, 0, 0, 1, 13, 'cast'],
-    [1, 2, -1, 0, 14, 'cast']
+    [2, 2, 0, -1, 9, 'pcast'],
+    [0, -3, -3, 0, 10, 'pcast'],
+    [1, 2, -1, 0, 11, 'pcast'],
+    [1, 1, 0, 0, 12, 'pcast'],
+    [0, 0, 0, 1, 13, 'pcast'],
+    [1, 2, -1, 0, 14, 'pcast']
 ]
 
 mdata = []
@@ -61,10 +61,10 @@ def reset(casted_id):
 """
 
 d = {
-    "".join((str(num) for num in ingradients[0][:4])): ingradients[0][:4]
+    "".join((str(num) for num in gradient[:4])): gradient[:4] for gradient in ingradients
 }
 d.update({"".join((str(num) for num in gradient[:4])) : gradient for gradient in casts})
-
+d.update({"".join((str(num) for num in gradient[:4])) : gradient for gradient in complex_casts})
 def check_for_brew(data, gradient):
     if all((data[i] >= abs(gradient[i]) for i in range(4))):
         return True
@@ -95,7 +95,6 @@ def calculate_number_steps(mdata, gradient, casts, l = 1):
 
 def calculate_probability(layers):
     cast_pro = ("".join((str(num) for num in layer[:4]))  for layer in layers)
-    print(layers)
     f = [1/ (1 + abs(sum(l[:4]))) for l in layers]
     t = sum(f)
     return zip(cast_pro, (num / t for num in f))
@@ -106,25 +105,26 @@ def search_items(data, parent, proba):
         node = queue.pop(0)
         key = list(node.keys())[0]
         if check_for_cast(data, d[key]):
-            print("found")
             return d[key]
         queue += sorted(list(node.values())[0], key=lambda x: -proba[list(x.keys())[0]])
 
 if __name__ == '__main__':
-    count = 0
-    proba = dict(calculate_probability(casts))
-    print(d)
-    pass
-    while not check_for_brew(my_data, ingradients[0]):
-        parent = get_all_child(my_data, ingradients[0], casts)
-        found = search_items(my_data, parent, proba)
-        print(my_data)
-        if found:
-            print(found)
-            my_data = cast(found, my_data)
+    proba = dict(calculate_probability(casts + complex_casts))
+    for i in range(5):
+        print('-' * 15)
+        count = 0
+        while not check_for_brew(my_data, ingradients[i]):
+            parent = get_all_child(my_data, ingradients[i], casts + complex_casts)
+            found = search_items(my_data, parent, proba)
+            print(my_data)
+            if found:
+                print('CAST', '-->', found)
+                my_data = cast(found, my_data)
+            else:
+                print('Error')
+            count += 1
+            if count >= 10:
+                print("timeout")
+                break
         else:
-            print('Error')
-        count += 1
-        if count >= 10:
-            print("timeout")
-            break
+            print(my_data, count, ingradients[i], 'ok')
