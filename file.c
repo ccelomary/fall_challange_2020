@@ -127,6 +127,7 @@ step_tuple      *next_step(int **casts, int len_casts, int *my_inv, int *target,
                 step->depth = fmin(step->depth, next_one->depth);
             free(next_one);
         }
+        free(current_casts);
     }
     return (step);
 }
@@ -171,12 +172,21 @@ int     *best_step(int **casts, int len_casts, int *my_inv, int *target, char ca
         }
         free(next_one);
     }
+    free(current_casts);
     return (best_cast);
 }
-
-
+int np[4][7] = {
+    { 2,  0,  0,  0, 78,  0,  1},
+    {-1,  1,  0,  0, 79,  0,  1},
+    { 0, -1,  1,  0, 80,  0,  1},
+    { 0,  0, -1,  1, 81,  0,  1}
+};
+int *target = {0, -2, -2, -2};
+int *inv = {3, 0, 0, 0};
 
 int         main(void)
 {
+    
+    best_step();
     return (0);
 }
