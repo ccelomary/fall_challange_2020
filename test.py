@@ -33,7 +33,7 @@ np.array([ 0,  0, -2,  2, 39,  1,  4,  1]),
 np.array([1, 1, 0, 0, 2, 0, 5, 1])]
 def calculate_score(element):
     return np.sum(element[:4] * np.array([1, 2, 3, 4]))
-target = np.array([0, 0, 0, -5])
+target = np.array([0, -2, -2, -2])
 import random
 import itertools
 prime = (2, 3, 5, 7)
@@ -79,7 +79,7 @@ def current_step(casts, target, data, casted={}, depth=5):
 if __name__ == '__main__':
     casted = {}
     for i in range(13):
-        current = current_step(casts + learn, target, my_data, casted, 4)
+        current = current_step(casts, target, my_data, casted, 3)
         print(current)
         if isinstance(current, str):
             print(casted)
